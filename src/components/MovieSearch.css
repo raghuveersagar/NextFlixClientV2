@@ -1,0 +1,115 @@
+.movie-search-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 100%;
+  padding: 16px 20px;
+  font-size: 18px;
+  border: 2px solid #3a3a3a;
+  border-radius: 12px;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-input::placeholder {
+  color: #888;
+}
+
+.search-input:focus {
+  border-color: #646cff;
+  box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.2);
+}
+
+.loading-indicator {
+  position: absolute;
+  right: 16px;
+  font-size: 14px;
+  color: #888;
+}
+
+.suggestions-list {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 8px 0;
+  list-style: none;
+  background-color: #1a1a1a;
+  border: 2px solid #3a3a3a;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.suggestion-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.suggestion-item:hover,
+.suggestion-item.selected {
+  background-color: #2a2a2a;
+}
+
+.movie-title {
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.movie-year {
+  font-size: 14px;
+  color: #888;
+  margin-left: 12px;
+}
+
+.movie-search-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 40px;
+}
+
+.featured-movies {
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+}
+
+.featured-title {
+  font-size: 1.5rem;
+  color: #fff;
+  margin-bottom: 24px;
+  text-align: center;
+  background: linear-gradient(90deg, #646cff, #9d4edd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.movies-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
