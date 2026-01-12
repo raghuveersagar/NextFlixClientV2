@@ -1,52 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import './MovieSearch.css';
+import '../Styles/MovieSearch.css';
 import MovieCard from './MovieCard';
-
-interface Movie {
-  id: number;
-  title: string;
-  year: number;
-}
-
-// Placeholder function to simulate backend API call
-const fetchMovieSuggestions = async (query: string): Promise<Movie[]> => {
-  // TODO: Replace with actual backend API call
-  // Example: return await fetch(`/api/movies/search?q=${query}`).then(res => res.json());
-  
-  // Simulated placeholder data
-  const mockMovies: Movie[] = [
-    { id: 1, title: 'The Shawshank Redemption', year: 1994 },
-    { id: 2, title: 'The Godfather', year: 1972 },
-    { id: 3, title: 'The Dark Knight', year: 2008 },
-    { id: 4, title: 'Pulp Fiction', year: 1994 },
-    { id: 5, title: 'Forrest Gump', year: 1994 },
-    { id: 6, title: 'Inception', year: 2010 },
-    { id: 7, title: 'The Matrix', year: 1999 },
-    { id: 8, title: 'Interstellar', year: 2014 },
-  ];
-
-  // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 300));
-
-  if (!query.trim()) return [];
-  
-  return mockMovies.filter(movie =>
-    movie.title.toLowerCase().includes(query.toLowerCase())
-  );
-};
-
-const featuredMovies = [
-  { id: 1, title: 'The Shawshank Redemption', posterUrl: 'https://image.tmdb.org/t/p/w500/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg' },
-  { id: 2, title: 'The Godfather', posterUrl: 'https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg' },
-  { id: 3, title: 'The Dark Knight', posterUrl: 'https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg' },
-  { id: 4, title: 'Pulp Fiction', posterUrl: 'https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg' },
-  { id: 5, title: 'Forrest Gump', posterUrl: 'https://image.tmdb.org/t/p/w500/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg' },
-  { id: 6, title: 'Inception', posterUrl: 'https://image.tmdb.org/t/p/w500/ljsZTbVsrQSqZgWeep2B1QiDKuh.jpg' },
-  { id: 7, title: 'The Matrix', posterUrl: 'https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg' },
-  { id: 8, title: 'Interstellar', posterUrl: 'https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg' },
-  { id: 9, title: 'Fight Club', posterUrl: 'https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg' },
-  { id: 10, title: 'Goodfellas', posterUrl: 'https://image.tmdb.org/t/p/w500/aKuFiU82s5ISJpGZp7YkIr3kCUd.jpg' },
-];
+import SelectedMovie from './SelectedMovie';
+import { fetchMovieSuggestions } from './Services';
+import type { Movie } from './Services';
 
 function MovieSearch() {
   const [query, setQuery] = useState('');
@@ -54,6 +11,7 @@ function MovieSearch() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -69,7 +27,7 @@ function MovieSearch() {
 
   useEffect(() => {
     const fetchSuggestions = async () => {
-      if (query.trim().length < 2) {
+      if (query.trim().length < 5) {
         setSuggestions([]);
         setIsOpen(false);
         return;
@@ -87,7 +45,6 @@ function MovieSearch() {
         setIsLoading(false);
       }
     };
-
     const debounceTimer = setTimeout(fetchSuggestions, 300);
     return () => clearTimeout(debounceTimer);
   }, [query]);
@@ -100,8 +57,12 @@ function MovieSearch() {
   const handleSelectMovie = (movie: Movie) => {
     setQuery(movie.title);
     setIsOpen(false);
-    // TODO: Call backend to get movie recommendations based on selection
-    console.log('Selected movie:', movie);
+    setSelectedMovie(movie);
+  };
+
+  const handleShowSimilar = (movie: Movie) => {
+    // TODO: Implement show similar functionality
+    console.log('Show similar movies for:', movie.title);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -155,26 +116,39 @@ function MovieSearch() {
                 onClick={() => handleSelectMovie(movie)}
                 onMouseEnter={() => setSelectedIndex(index)}
               >
+                <img 
+                  src={`https://image.tmdb.org/t/p/w92${movie.poster_path}`} 
+                  alt={movie.title}
+                  className="suggestion-poster"
+                />
                 <span className="movie-title">{movie.title}</span>
-                <span className="movie-year">({movie.year})</span>
               </li>
             ))}
           </ul>
         )}
       </div>
+
+      {selectedMovie && (
+        <SelectedMovie 
+          movie={selectedMovie} 
+          onShowSimilar={handleShowSimilar} 
+        />
+      )}
       
-      <div className="featured-movies">
-        <h2 className="featured-title">Popular Movies</h2>
-        <div className="movies-grid">
-          {featuredMovies.map((movie) => (
-            <MovieCard
-              key={movie.id}
-              title={movie.title}
-              posterUrl={movie.posterUrl}
-            />
-          ))}
+      {suggestions.length > 0 && (
+        <div className="featured-movies">
+          <h2 className="featured-title">Suggested Movies</h2>
+          <div className="movies-grid">
+            {suggestions.map((movie) => (
+              <MovieCard
+                key={movie.id}
+                title={movie.title}
+                posterUrl={`https://image.tmdb.org/t/p/w500/${movie.id}.jpg`}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

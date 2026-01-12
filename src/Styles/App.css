@@ -1,7 +1,8 @@
 #root {
   margin: 0 auto;
   text-align: center;
-  padding: 2rem;
+  padding: 0;
+  width: 100%;
 }
 
 .logo {
@@ -53,6 +54,8 @@
   text-align: center;
   position: relative;
   overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .header::before {
@@ -81,14 +84,15 @@
 
 .header h1 {
   margin: 0;
-  font-size: 2.5rem;
+  font-size: 3.5rem;
   font-weight: 700;
-  background: linear-gradient(90deg, #646cff, #9d4edd, #ff6b6b, #feca57, #48dbfb, #646cff);
-  background-size: 300% 100%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: colorShift 5s ease infinite, waveText 2s ease-in-out infinite;
+  color: #00ff00;
+  text-transform: lowercase;
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: unset;
+  background-clip: unset;
+  animation: none;
   display: inline-block;
   position: relative;
 }
@@ -121,8 +125,8 @@
   flex: 1;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 40px 20px;
+  align-items: flex-start;
+  padding: 100px 20px 40px 20px;
 }
 
 .footer {
@@ -152,4 +156,25 @@
 
 .footer a:hover {
   color: #9d4edd;
+}
+
+.top-bar {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+}
+
+.logo-text {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #00ff00;
+}
+
+.logo-subtitle {
+  margin: 4px 0 0 0;
+  font-size: 0.9rem;
+  color: #888;
+  font-weight: 400;
 }

@@ -1,0 +1,35 @@
+import '../Styles/SelectedMovie.css';
+import type { Movie } from './Services';
+
+interface SelectedMovieProps {
+  movie: Movie;
+  onShowSimilar: (movie: Movie) => void;
+}
+
+function SelectedMovie({ movie, onShowSimilar }: SelectedMovieProps) {
+  const posterUrl = `https://image.tmdb.org/t/p/w200${movie.poster_path}`;
+
+  return (
+    <div className="selected-movie">
+      <div className="selected-movie-content">
+        <div className="selected-movie-poster">
+          <img src={posterUrl} alt={movie.title} />
+        </div>
+        <div className="selected-movie-info">
+          <h2 className="selected-movie-title">{movie.title}</h2>
+          <p className="selected-movie-plot">
+            {movie.overview || 'No plot details available.'}
+          </p>
+          <button 
+            className="show-similar-btn"
+            onClick={() => onShowSimilar(movie)}
+          >
+            Show Similar
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default SelectedMovie;

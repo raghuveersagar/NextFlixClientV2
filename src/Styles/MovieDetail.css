@@ -1,0 +1,36 @@
+.movie-detail {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.movie-detail-header {
+  padding: 40px;
+  text-align: center;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.movie-detail-header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #646cff, #9d4edd, #ff6b6b);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.movie-detail-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.movie-detail-content p {
+  color: #888;
+  font-size: 1.2rem;
+}
