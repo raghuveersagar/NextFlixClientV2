@@ -4,6 +4,7 @@ import MovieCard from './MovieCard';
 import SelectedMovie from './SelectedMovie';
 import { fetchMovieSuggestions } from './Services';
 import type { Movie } from './Services';
+import noPosterImage from '../assets/no-poster.svg';
 
 function MovieSearch() {
   const [query, setQuery] = useState('');
@@ -110,19 +111,27 @@ function MovieSearch() {
         {isOpen && suggestions.length > 0 && (
           <ul className="suggestions-list">
             {suggestions.map((movie, index) => (
-              <li
+                <li
                 key={movie.id}
                 className={`suggestion-item ${index === selectedIndex ? 'selected' : ''}`}
                 onClick={() => handleSelectMovie(movie)}
                 onMouseEnter={() => setSelectedIndex(index)}
-              >
-                <img 
-                  src={`https://image.tmdb.org/t/p/w92${movie.poster_path}`} 
+                >
+                  <img 
+                  src={movie.poster_path 
+                    ? `https://image.tmdb.org/t/p/w92${movie.poster_path}`
+                    : noPosterImage
+                  } 
                   alt={movie.title}
                   className="suggestion-poster"
-                />
-                <span className="movie-title">{movie.title}</span>
-              </li>
+                  />
+                <div className="movie-info-text">
+                  <span className="movie-title">{movie.title}</span>
+                  {movie.release_date && (
+                    <span className="movie-year">{movie.release_date.substring(0, 4)}</span>
+                  )}
+                </div>
+                </li>
             ))}
           </ul>
         )}
@@ -135,7 +144,7 @@ function MovieSearch() {
         />
       )}
       
-      {suggestions.length > 0 && (
+      {false && (
         <div className="featured-movies">
           <h2 className="featured-title">Suggested Movies</h2>
           <div className="movies-grid">

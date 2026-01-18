@@ -3,6 +3,7 @@ export interface Movie {
   title: string;
   poster_path: string;
   overview?: string;
+  release_date?: string;
 }
 
 export const fetchMovieSuggestions = async (query: string): Promise<Movie[]> => {
@@ -16,7 +17,6 @@ export const fetchMovieSuggestions = async (query: string): Promise<Movie[]> => 
     }  
     const resp = await response.json();
     const results: Movie[] = resp?.results;
-    console.log(results);
     return results;
   } catch (error) {
     console.error('Error fetching movie suggestions:', error);

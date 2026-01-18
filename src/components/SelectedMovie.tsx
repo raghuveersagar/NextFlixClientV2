@@ -1,5 +1,6 @@
 import '../Styles/SelectedMovie.css';
 import type { Movie } from './Services';
+import noPosterImage from '../assets/no-poster.svg';
 
 interface SelectedMovieProps {
   movie: Movie;
@@ -7,7 +8,9 @@ interface SelectedMovieProps {
 }
 
 function SelectedMovie({ movie, onShowSimilar }: SelectedMovieProps) {
-  const posterUrl = `https://image.tmdb.org/t/p/w200${movie.poster_path}`;
+  const posterUrl = movie.poster_path 
+    ? `https://image.tmdb.org/t/p/w200${movie.poster_path}`
+    : noPosterImage;
 
   return (
     <div className="selected-movie">
