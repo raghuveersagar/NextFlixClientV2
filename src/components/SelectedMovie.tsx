@@ -1,13 +1,13 @@
 import '../Styles/SelectedMovie.css';
-import type { Movie } from './Services';
+import type { Movie } from '../Model/Movie';
 import noPosterImage from '../assets/no-poster.svg';
 
 interface SelectedMovieProps {
   movie: Movie;
-  onShowSimilar: (movie: Movie) => void;
+  onGetRecommendations: (movie: Movie) => void;
 }
 
-function SelectedMovie({ movie, onShowSimilar }: SelectedMovieProps) {
+function SelectedMovie({ movie, onGetRecommendations }: SelectedMovieProps) {
   const posterUrl = movie.poster_path 
     ? `https://image.tmdb.org/t/p/w200${movie.poster_path}`
     : noPosterImage;
@@ -25,9 +25,9 @@ function SelectedMovie({ movie, onShowSimilar }: SelectedMovieProps) {
           </p>
           <button 
             className="show-similar-btn"
-            onClick={() => onShowSimilar(movie)}
+            onClick={() => onGetRecommendations(movie)}
           >
-            Show Similar
+            Get Recommendations
           </button>
         </div>
       </div>

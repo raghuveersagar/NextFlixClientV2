@@ -1,6 +1,6 @@
 import { useParams, useLocation } from 'react-router-dom';
 import '../Styles/MovieDetail.css';
-import type { Movie } from './Services';
+import type { Movie } from '../Model/Movie';
 import noPosterImage from '../assets/no-poster.svg';
 
 function MovieDetail() {
