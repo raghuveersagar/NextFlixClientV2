@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import '../Styles/MovieSearch.css';
 import MovieCard from './MovieCard';
 import SelectedMovie from './SelectedMovie';
-import { fetchMovieSuggestionsWithDiscover } from '../Services/Movies.svc';
+import Recommendations from './Recommendations';
+import { fetchMovieSuggestions } from '../Services/Movies.svc';
 import type { Movie } from '../Model/Movie';
 import { getLanguageName } from '../constants';
 import noPosterImage from '../assets/no-poster.svg';
@@ -16,6 +17,8 @@ function MovieSearch() {
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [showRecommendations, setShowRecommendations] = useState(false);
+  const [skipFetch, setSkipFetch] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -29,28 +32,31 @@ function MovieSearch() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const fetchSuggestions = async (searchQuery: string, page: number) => {
+    setIsLoading(true);
+    try {
+      const result = await fetchMovieSuggestions(searchQuery, page);
+      setSuggestions(result.results);
+      setTotalPages(result.total_pages);
+      setIsOpen(result.results.length > 0);
+    } catch (error) {
+      console.error('Error fetching suggestions:', error);
+      setSuggestions([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (query.length === 0) {
       setSuggestions([]);
       setIsOpen(false);
       return;
     }
-    const fetchSuggestions = async () => {
-      setIsLoading(true);
-      try {
-        let result;
-        result = await fetchMovieSuggestionsWithDiscover(query, currentPage);
-        setSuggestions(result.results);
-        setTotalPages(result.total_pages);
-        setIsOpen(result.results.length > 0);
-      } catch (error) {
-        console.error('Error fetching suggestions:', error);
-        setSuggestions([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    const debounceTimer = setTimeout(fetchSuggestions, 300);
+    if (skipFetch) {
+      return;
+    }
+    const debounceTimer = setTimeout(() => fetchSuggestions(query, currentPage), 300);
     return () => clearTimeout(debounceTimer);
   }, [query, currentPage]);
 
@@ -58,18 +64,18 @@ function MovieSearch() {
     setQuery(e.target.value);
     setSelectedIndex(-1);
     setCurrentPage(1);
+    setSkipFetch(false);
   };
 
   const handleSelectMovie = (movie: Movie) => {
+    setSkipFetch(true);
     setQuery(movie.title);
     setIsOpen(false);
     setSelectedMovie(movie);
   };
 
   const handleGetRecommendations = (movie: Movie) => {
-    // TODO: Implement get recommendations functionality
-    console.log('Get recommendations for:', movie);
-
+    setShowRecommendations(true);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -125,7 +131,9 @@ function MovieSearch() {
             value={query}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
-            onFocus={() => suggestions.length > 0 && setIsOpen(true)}
+            onFocus={() => {
+              suggestions.length > 0 && setIsOpen(true);
+            }}
           />
           {isLoading && <span className="loading-indicator">Loading...</span>}
         </div>
@@ -192,6 +200,10 @@ function MovieSearch() {
           movie={selectedMovie} 
           onGetRecommendations={handleGetRecommendations} 
         />
+      )}
+
+      {showRecommendations && selectedMovie && (
+        <Recommendations movie={selectedMovie} />
       )}
       
       {false && (
